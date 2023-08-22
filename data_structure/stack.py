@@ -39,4 +39,3 @@ if result:
 #오큰수란 수열에서 N의 오른쪽에 위치한 수 중 N보다 큰 가장 왼쪽에 위치한 수
 
 user_list = list(map(int, input("수열을 입력하시오").split()))
-print(user_list)
