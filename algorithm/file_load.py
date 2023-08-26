@@ -62,5 +62,37 @@ mpg['size'].value_counts()
 mpg['size'] = np.where(mpg['category'].isin(['compact','subcompact','2seater']), 'small', 'large')
 mpg['size'].value_counts()
 
+#실전 분석하기
+#midwest.csv는 미국 동북중부 437개 지역의 인구통계 정보를 담고있다. 이를 통해 문제를 해결해보아라
+
+#midwest.csv 불러와 파일 특징 파악하기
+import pandas as pd
+df = pd.read_csv("midwest.csv")
+df.head()
+df.shape # (437,28)
+df.describe()
+
+#poptotal 변수를 total로, popasian 변수를 asian으로 바꾸기
+df_new = df.copy()
+df_new = df.rename(columns = {'poptotal' : 'total', 'popasian' : 'asian'})
+df_new.head()
+
+#total과 asian을 활용해서 전체 인구 대비 아시아 인구의 백분율을 나타내는 변수를 만드시오
+df_new['asian/total(%)'] = (df_new['asian'] / df_new['total'] * 100)
+df_new.head()
+
+#히스토그램 만들어 분포 확인
+df_grade = df_new['asian/total(%)'].value_counts().sort_index()
+# df_grade.plot.bar()
+
+#아시아 인구 전체의 평균을 구하고 평균 이상이면 large or small
+df_new['asian/total(%)'].mean() #0.48
+df_new['asian_grade'] = np.where(df_new['asian/total(%)'] >= 0.48, 'large', 'small')
+df_new.head()
+
+#그래프 만들어 비율 확인
+df_grade = df_new['asian_grade'].value_counts().sort_index()
+df_grade.plot.bar(rot = 0)
+
 
 
