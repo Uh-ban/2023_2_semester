@@ -105,6 +105,18 @@ df.assign(total = lambda x: x['math'] + x['english'] + x['science'],
 import numpy as np
 df.assign(test = np.where(df['science'] >= 60, 'pass', 'fail'))
 
+#집단별로 요약하기
+#요약 통계량 .agg()
+df.agg(mean_math = ('math','mean')) #요약값 할당할 변수명과 요약에 쓸 변수명, 함수명
+#.agg는 주로 groupby로 묶인 것에 쓰임
+df.groupby('nclass').agg(mean_math = ('math','mean'))
+
+#여러 통계량 한번에 구하기
+df.groupby('nclass').agg(mean_math = ('math','mean'),
+                         sum_math = ('math', 'sum'),
+                         median_math = ('math','median'),
+                         n = ('nclass','count'))
+
 
 
 
