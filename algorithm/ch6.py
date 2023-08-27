@@ -117,6 +117,42 @@ df.groupby('nclass').agg(mean_math = ('math','mean'),
                          median_math = ('math','median'),
                          n = ('nclass','count'))
 
+#집단별로 다시 집단 나누기
+df = pd.read_csv('mpg.csv')
+df.groupby(['manufacturer','drv']).agg(mean_city = ('cty','mean'))
+#audi의 drv별 빈도
+df.query('manufacturer == "audi"').groupby(['drv']).agg(n = ('drv','count'))
+
+df.groupby(['manufacturer','drv']).agg(n = ('drv','count'),
+                                       mean_city = ('cty','mean'))
+#value_counts()
+df['drv'].value_counts()
+
+#제조회사별로 suv 자동차의 도시 및 고속도로 합산 연비 평균을 구해 내림차순 정렬하고 1-5위 출력하기
+
+result = (
+    df.query('category == "suv"')
+    .assign(total=lambda x: (x['hwy'] + x['cty']) / 2)
+    .groupby(['manufacturer'])
+    .agg(total_mean=('total', 'mean'))
+    .sort_values('total_mean', ascending=False)
+    .head()
+)
+
+# 결과 출력
+print(result)
 
 
+#차종의 도시연비 비교.
+df.groupby(['category']).agg(mean_cty = ('cty','mean'))
 
+#위 데이터를 내림차순 정리
+df.groupby(['category']).agg(mean_cty = ('cty','mean')).sort_values('mean_cty', ascending = False)
+
+#hwy 평균이 가장 높은 3개 제조사 출력
+df.groupby(['manufacturer']).agg(mean_hwy=('hwy','mean')).sort_values('mean_hwy', ascending = False)[0:3]
+
+#compact차종을 많이 생산하는 제조사 순 정렬
+df.query('category == "compact"').groupby('manufacturer').agg(n = ('manufacturer','count')).sort_values('n', ascending = False)
+#또는
+df.query('category == "compact"').value_counts('manufacturer')
