@@ -67,4 +67,14 @@ df.drop(columns = ['math','english'])
 #nclass가 1인 데이터의 english 데이터
 df.query('nclass == 1')['english']
 
-df.query('math >= 50')[['id','math']]
+df.query('math >= 50')[['id','math']]#데이터 정렬 sort_values()
+# df.sort_values('math') #math 오름차순
+# df.sort_values('math', ascending = False) #math 내림차순
+# df.sort_values(['nclass','math']) #반을 오름차순으로 정렬하고 반 안에서 수학성적 오름차순
+# df.sort_values(['nclass','math'], ascending = [True, False]) #반을 오름차순으로 정렬하고 반 안에서 수학성적 내림차순
+
+#audi 자동자 중 hwy가 높은지 알아보려 함. 1-5등 데이터 추출
+df = pd.read_csv('mpg.csv')
+audi = df.query('manufacturer == "audi"')
+audi.sort_values('hwy',ascending = False)[:5]
+
