@@ -68,13 +68,43 @@ df.drop(columns = ['math','english'])
 df.query('nclass == 1')['english']
 
 df.query('math >= 50')[['id','math']]#데이터 정렬 sort_values()
-# df.sort_values('math') #math 오름차순
-# df.sort_values('math', ascending = False) #math 내림차순
-# df.sort_values(['nclass','math']) #반을 오름차순으로 정렬하고 반 안에서 수학성적 오름차순
-# df.sort_values(['nclass','math'], ascending = [True, False]) #반을 오름차순으로 정렬하고 반 안에서 수학성적 내림차순
+df.sort_values('math') #math 오름차순
+df.sort_values('math', ascending = False) #math 내림차순
+df.sort_values(['nclass','math']) #반을 오름차순으로 정렬하고 반 안에서 수학성적 오름차순
+df.sort_values(['nclass','math'], ascending = [True, False]) #반을 오름차순으로 정렬하고 반 안에서 수학성적 내림차순
 
 #audi 자동자 중 hwy가 높은지 알아보려 함. 1-5등 데이터 추출
 df = pd.read_csv('mpg.csv')
 audi = df.query('manufacturer == "audi"')
 audi.sort_values('hwy',ascending = False)[:5]
+
+#파생변수 추가하기
+#변수명 = 변수를 이루는 공식. *새로운 변수는 따옴표 안 함
+df = pd.read_csv('exam.csv')
+df.assign(total = df['math']+df['english'] + df['science'])
+
+#여러 변수 추가
+df.assign(total = df['math']+df['english'] + df['science'],
+          mean = (df['math']+df['english'] + df['science']) / 3)
+#assign에 np.where
+import numpy as np
+df.assign(test = np.where(df['science'] >= 60, 'pass', 'fail'))
+
+#파생변수 추가하기
+#변수명 = 변수를 이루는 공식. *새로운 변수는 따옴표 안 함
+df = pd.read_csv('exam.csv')
+df.assign(total = df['math']+df['english'] + df['science'])
+
+#여러 변수 추가
+df.assign(total = df['math']+df['english'] + df['science'],
+          mean = (df['math']+df['english'] + df['science']) / 3)
+# 변수명이 긴 경우, lambda를 이용해 간략화
+df.assign(total = lambda x: x['math'] + x['english'] + x['science'],
+          mean = lambda x: (x['math']+x['english'] + x['science']) / 3)
+#assign에 np.where
+import numpy as np
+df.assign(test = np.where(df['science'] >= 60, 'pass', 'fail'))
+
+
+
 
