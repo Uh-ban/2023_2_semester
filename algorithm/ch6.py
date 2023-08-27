@@ -54,3 +54,17 @@ else:
 #chevrolet, ford, honda 세 브랜드의 hwy 평균
 CFH = df.query('manufacturer in ["chevrolet","ford","honda"]')
 CFH['hwy'].mean()
+
+df = pd.read_csv('exam.csv')
+#여러 변수 추출시 [[]]로 데이터 프레임 유지
+df[['nclass','math','english']]
+
+#변수 제거하기
+df.drop(columns = 'math')
+df.drop(columns = ['math','english'])
+
+#pandas 함수 조합 (query, [])
+#nclass가 1인 데이터의 english 데이터
+df.query('nclass == 1')['english']
+
+df.query('math >= 50')[['id','math']]
