@@ -156,3 +156,4 @@ df.groupby(['manufacturer']).agg(mean_hwy=('hwy','mean')).sort_values('mean_hwy'
 df.query('category == "compact"').groupby('manufacturer').agg(n = ('manufacturer','count')).sort_values('n', ascending = False)
 #또는
 df.query('category == "compact"').value_counts('manufacturer')
+#보다시피 함수에 대한 이해도가 깊을수록 코드를 더욱 갈략화하게 적을 수 있다. 이런 코드를 짤 수 있게 하자
