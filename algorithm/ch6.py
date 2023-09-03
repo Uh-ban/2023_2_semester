@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import sklearn
+
 
 #data preprocessing
 #조건에 맞는 데이터 추출
@@ -156,4 +156,45 @@ df.groupby(['manufacturer']).agg(mean_hwy=('hwy','mean')).sort_values('mean_hwy'
 df.query('category == "compact"').groupby('manufacturer').agg(n = ('manufacturer','count')).sort_values('n', ascending = False)
 #또는
 df.query('category == "compact"').value_counts('manufacturer')
-#보다시피 함수에 대한 이해도가 깊을수록 코드를 더욱 갈략화하게 적을 수 있다. 이런 코드를 짤 수 있게
+#보다시피 함수에 대한 이해도가 깊을수록 코드를 더욱 갈략화하게 적을 수 있다. 이런 코드를 짤 수 있게 
+
+import pandas as pd
+import numpy as np
+
+#가로 합치기(열추가)
+test1 = pd.DataFrame({'id'   : [1,2,3,4,5],
+                      'midterm' : [60,80,70,90,85]})
+
+test2 = pd.DataFrame({'id'   : [1,2,3,4,5],
+                      'final'  : [45,78,57,24,98]})
+#how에는 어디에 넣을지, on은 어느 열을 기준삼을지
+total = pd.merge(test1,test2,how = 'left',on = 'id')
+
+
+df = pd.read_csv("exam.csv")
+#exam파일에 반별 담임이름 넣기
+name = pd.DataFrame({'nclass' : [1,2,3,4,5],
+                     'teacher'  : ['lee','kim','park','jo','choi']})
+total = pd.merge(df,name,how = 'left',on = 'nclass')
+
+
+#세로 합치기 (행 추가)
+test1 = pd.DataFrame({'id'   : [1,2,3,4,5],
+                      'midterm' : [60,80,70,90,85]})
+
+test2 = pd.DataFrame({'id'   : [6,7,8,9,10],
+                      'final'  : [45,78,57,24,98]})
+
+
+test_all = pd.concat([test1,test2])
+#index 겹치는 문제 해결
+test_all = pd.concat([test1,test2],ignore_index = True)
+
+#혼자 해보기
+df = pd.read_csv("mpg.csv")
+
+fuel = pd.DataFrame({'fl'   : ['c','d','e','p','r'],
+                     'price_fl' : [2.35,2.38,2.11,2.76,2.22]})
+df_fl = pd.merge(df,fuel,how = 'left', on = 'fl')
+
+
