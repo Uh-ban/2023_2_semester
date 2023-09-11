@@ -23,6 +23,7 @@ model.add(Dense(1, activation='tanh'))
 # Optimizer로 'adam'을 사용하여 모델을 학습시키며, 손실 함수로 'mse' (Mean Squared Error)를 사용
 model.compile(optimizer='adam', loss='mse')
 
+
 #학습하기
 # 데이터 로드하기
 X_train, y_train = load_data()
