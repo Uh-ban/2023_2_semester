@@ -79,66 +79,66 @@ print(f'따라서 피곤{is_tired}.')
 #######################################################################################
 #######################################################################################
 #######################################################################################
-import torch
-import pandas as pd
-from sklearn import datasets
-import matplotlib.pyplot as plt
+# import torch
+# import pandas as pd
+# from sklearn import datasets
+# import matplotlib.pyplot as plt
 
-EPOCH = 10000
+# EPOCH = 10000
 
 
-dataset = datasets.load_iris()
-x = torch.Tensor(dataset.data)
-print(x.shape)
-y = torch.LongTensor(dataset.target)
-print(y.shape)
+# dataset = datasets.load_iris()
+# x = torch.Tensor(dataset.data)
+# print(x.shape)
+# y = torch.LongTensor(dataset.target)
+# print(y.shape)
 
-#총 150:5 데이터에 마지막 5열에 답이 있음을 알 수 있음.
+# #총 150:5 데이터에 마지막 5열에 답이 있음을 알 수 있음.
 
-class Net(torch.nn.Module) :
-    def __init__ (self):
-        super (Net, self).__init__()
-        self. fc1 = torch.nn. Linear(4, 64) #4는 feature의 갯수. 그 사이 히든 레이어의 수는 상관 없음. 4개의 특성을 64개의 특성으로 펼쳐서 보겠다. 은닉층의 입력 갯수가 기존의 갯수보다는 커야하고 너무 커도 안 좋음
-        self. fc2 = torch. nn. Linear(64, 32) #이 전 레이어의 수와 같은 수로 받아야 함.
-        self.fc3 = torch.nn. Linear(32, 16) #이 전 레이어의 수와 같은 수로 받아야 함.
-        self.fc4 = torch.nn. Linear(16, 3) #3은
-        self.relu = torch.nn.ReLU() #마지막 층에서 ReLU값을 쓰면 0이하의 값은 0으로 나머지는 선형함수로 표현. 따라서 마지막 층에서 렐루함수를 쓰면 정보의 손실이 일어나기에 마지막 층에서는 쓰지 않음
+# class Net(torch.nn.Module) :
+#     def __init__ (self):
+#         super (Net, self).__init__()
+#         self. fc1 = torch.nn. Linear(4, 64) #4는 feature의 갯수. 그 사이 히든 레이어의 수는 상관 없음. 4개의 특성을 64개의 특성으로 펼쳐서 보겠다. 은닉층의 입력 갯수가 기존의 갯수보다는 커야하고 너무 커도 안 좋음
+#         self. fc2 = torch. nn. Linear(64, 32) #이 전 레이어의 수와 같은 수로 받아야 함.
+#         self.fc3 = torch.nn. Linear(32, 16) #이 전 레이어의 수와 같은 수로 받아야 함.
+#         self.fc4 = torch.nn. Linear(16, 3) #3은
+#         self.relu = torch.nn.ReLU() #마지막 층에서 ReLU값을 쓰면 0이하의 값은 0으로 나머지는 선형함수로 표현. 따라서 마지막 층에서 렐루함수를 쓰면 정보의 손실이 일어나기에 마지막 층에서는 쓰지 않음
 
-    def forward (self, x) :
-        x = self. relu(self. fc1(x))
-        x = self.relu(self. fc2(x))
-        x = self.relu(self. fc3(x))
-        z = self. fc4(x)
+#     def forward (self, x) :
+#         x = self. relu(self. fc1(x))
+#         x = self.relu(self. fc2(x))
+#         x = self.relu(self. fc3(x))
+#         z = self. fc4(x)
 
-        return z
+#         return z
 
-net = Net()
-cel = torch.nn.CrossEntropyLoss()
-optimizer = torch.optim.SGD(net.parameters(), lr = 0.01 )
-loss_lst = []
+# net = Net()
+# cel = torch.nn.CrossEntropyLoss()
+# optimizer = torch.optim.SGD(net.parameters(), lr = 0.01 )
+# loss_lst = []
 
-for epoch in range(EPOCH):
-    z = net(x)
+# for epoch in range(EPOCH):
+#     z = net(x)
 
-    loss = cel(z,y)
-    optimizer.zero_grad()
-    loss.backward()
-    optimizer.step()
-    loss_lst.append(loss.item())
+#     loss = cel(z,y)
+#     optimizer.zero_grad()
+#     loss.backward()
+#     optimizer.step()
+#     loss_lst.append(loss.item())
 
-    if epoch % 1000 == 0:
-        print(f'epoch = {epoch}, loss = {loss.item():0.5f}')
+#     if epoch % 1000 == 0:
+#         print(f'epoch = {epoch}, loss = {loss.item():0.5f}')
 
-plt.plot(range(EPOCH),loss_lst)
-plt.xlabel('EPOCHS')
-plt.ylabel('LOSS')
-plt.grid(True)
-plt.show()
+# plt.plot(range(EPOCH),loss_lst)
+# plt.xlabel('EPOCHS')
+# plt.ylabel('LOSS')
+# plt.grid(True)
+# plt.show()
 
-z = net(x)
-y_hat = torch.argmax(torch.softmax(z, dim = 1), dim=1)
-correct = torch.sum(y==y_hat)
-accuracy = correct / len(y)*100
+# z = net(x)
+# y_hat = torch.argmax(torch.softmax(z, dim = 1), dim=1)
+# correct = torch.sum(y==y_hat)
+# accuracy = correct / len(y)*100
 
-print(f'Accuracy = {accuracy:0.2f}%')
+# print(f'Accuracy = {accuracy:0.2f}%')
 
