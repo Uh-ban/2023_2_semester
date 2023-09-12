@@ -5,6 +5,7 @@ class Net(torch.nn.Module):
     def __init__(self):
         super(Net, self).__init__()
 
+
         # 선형 계층을 생성한다.
         self.linear = torch.nn.Linear(1, 1)
 
