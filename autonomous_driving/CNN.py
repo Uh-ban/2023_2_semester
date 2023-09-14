@@ -114,4 +114,24 @@ model.compile(loss = 'categorical_crossentropy', metrics='accuracy')
 #모델 학습
 model.fit(독립, 종속, epochs=5)
 
+#Conv2d
+#Convolution: 특정한 패턴의 특징이 어디서 나타나는지 확인하는 도구
+
+#데이터 준비
+(독립,종속),_ = tf.keras.datasets.mnist.load_data()
+독립 = 독립.reshape(60000,28,28,1) # 컬러 이미지가 RGB3차원이기에 그에 맞게 3차원 형태로 reshape
+종속 = pd.get_dummies(종속)
+print(독립.shape, 종속.shape)
+
+#모델의 구조
+X = tf.keras.layers.Input(shape=[28,28,1]) #데이터 형태 3차원으로 설정
+H = tf.keras.layers.Conv2D(3, kernel_size=5, activation='swish')(X) #3개의 특징맵 = 3채널의 특징맵
+H = tf.keras.layers.Conv2D(6, kernel_size=5, activation='swish')(H) #6개의 특징맵 = 6채널의 특징맵
+#3,6은 필터셋의 개수, kernel_size는 그 필터의 사이즈(5는 5by5픽셀)
+H = tf.keras.layers.Flatten()(H) #표형태로 만들기 
+H = tf.keras.layers.Dense(84, activation='swish')(H)
+Y = tf.keras.layers.Dense(10, activaation='softmax')(H)
+model = tf.keras.models.Model(X,Y)
+model.compile(loss='scategorical_crossentropy', metrics='accuracy')
+
 
