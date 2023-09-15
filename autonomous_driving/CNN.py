@@ -134,4 +134,53 @@ Y = tf.keras.layers.Dense(10, activaation='softmax')(H)
 model = tf.keras.models.Model(X,Y)
 model.compile(loss='scategorical_crossentropy', metrics='accuracy')
 
+#Filter. Conv2D를 이해하는 데에 중요함
+
+#filter set은 3차원 형태로 된 가중치 모음
+#필터셋 하나는 앞선 레이어의 결과인 "특징맵"전체를 본다
+#필터셋의 개수만큼 특징맵을 만든다
+#Conv2D(3, kernel_size=5, activation='swish')를 예로 들면
+#필터가 3개(F1,F2,F3)이고 필터 하나의 형태는 (5,5,?)이다. ?에는 앞의 특징맵의 채널(차원)수에 따라 다른데 흑백이라면 1, 컬러라면 3
+#따라서 전체 필터의 형태는 (3,5,5,?) 이런 식이 된다.(필터 개수, 한 필터 크기, ?)
+#필터셋이라는 말은 안쓰고 그냥 필터로 통칭
+#Conv2D(3, kernel_size=5, activation='swish')
+#Conv2D(6, kernel_size=5, activation='swish')
+#(28,28,1)인 이미지를 필터하면 1st convolution layer(24,24,3)의 필터 생김. 크기가 24인 이유는 (필터 사이즈-1)만큼 작아짐
+#2nd convolution layer에서 필터{(5,5,3)*6 3인 이유는 앞 채널의 수가 3이어서}하면 (20,20,6)의 특징맵 생김
+#특징맵 하나를 만들 때 필터 하나는 앞 레이어의 특징맵 전체를 보고 만드는 것
+
+import tensorflow as tf
+import pandas as pd
+
+#데이터 불러오기
+(독립,종속),_ = tf.keras.datasets.mnist.load_data()
+print(독립.shape, 종속.shape) #(60000, 28, 28) (60000,)
+#Convolution layer는 이미지 하나의 형태가 이차원이 아닌 삼차원이어야 하기에 reshape
+독립 = 독립.reshape(60000,28,28,1)
+종속 = pd.get_dummies(종속) #원핫인코딩
+print(독립.shape, 종속.shape) #(60000, 28, 28, 1) (60000, 10)
+
+#모델 생성
+X = tf.keras.layers.Input(shape=[28,28,1])
+H = tf.keras.layers.Conv2D(3,kernel_size=5,activation='swish')(X)
+H = tf.keras.layers.Conv2D(6,kernel_size=5,activation='swish')(H)
+H = tf.keras.layers.Flatten()(H) #Flatten과정으로 표 형태로 펼침.
+H = tf.keras.layers.Dense(84,activation='swish')(H) #은닉층
+Y = tf.keras.layers.Dense(10,activation='softmax')(H) #출력층. 레이블 개수
+
+model = tf.keras.models.Model(X,Y)
+model.compile(loss = 'categorical_crossentropy', metrics = 'accuracy')
+
+#모델 학습
+model.fit(독립,종속,epochs=10)
+#loss: 0.0197 - accuracy: 0.9945
+#2min 26sec
+
+#모델 이용
+print(종속[0:5])
+pred = model.predict(독립[0:5])
+pd.DataFrame(pred).round(2)
+
+#모델 과정 요약
+model.summary()
 
