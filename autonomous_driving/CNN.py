@@ -184,3 +184,202 @@ pd.DataFrame(pred).round(2)
 #모델 과정 요약
 model.summary()
 
+#Pooling
+#model.summary를 보면 flatten 과정 후 가중치의 수가 201,684로 매우 큰데 이를 보완하기 위한 것.
+#Conv2D이후에 사용하여 크기를 반으로 줄임 ex) (24,24,3) -> (12,12,3) 2by2로 묶고 그 값들 중 가장 큰 수 남기기:MaxPooling, 평균 남기기:AveragePooling
+#이렇게 해도 되는 이유는 Conv2D는 특징맵으로 값이 크다 = 필터로 찾으려는 특징이 많이 나타난 부분 으로 해석 가능하기 때문
+
+
+###################################################
+###################################################
+#지금껏 배운 것 합쳐서 CNN 모델 만들기
+import tensorflow as tf
+import pandas as pd
+
+#데이터 불러오기
+(독립,종속),_ = tf.keras.datasets.mnist.load_data()
+print(독립.shape, 종속.shape) #(60000, 28, 28) (60000,)
+#Convolution layer는 이미지 하나의 형태가 이차원이 아닌 삼차원이어야 하기에 reshape
+독립 = 독립.reshape(60000,28,28,1)
+종속 = pd.get_dummies(종속) #원핫인코딩
+print(독립.shape, 종속.shape) #(60000, 28, 28, 1) (60000, 10)
+
+#모델 생성
+X = tf.keras.layers.Input(shape=[28,28,1])
+H = tf.keras.layers.Conv2D(3,kernel_size=5,activation='swish')(X)
+H = tf.keras.layers.MaxPool2D()(H)
+H = tf.keras.layers.Conv2D(6,kernel_size=5,activation='swish')(H)
+H = tf.keras.layers.MaxPool2D()(H)
+H = tf.keras.layers.Flatten()(H) #Flatten과정으로 표 형태로 펼침.
+H = tf.keras.layers.Dense(84,activation='swish')(H) #은닉층
+Y = tf.keras.layers.Dense(10,activation='softmax')(H) #출력층. 레이블 개수
+
+model = tf.keras.models.Model(X,Y)
+model.compile(loss = 'categorical_crossentropy', metrics = 'accuracy')
+#'categorical_crossentropy'는 다중 클래스 분류 문제에서 주로 사용되는 손실 함수입니다. 
+#모델이 예측한 클래스 확률 분포와 실제 클래스의 원-핫 인코딩 레이블 간의 차이를 측정하여 손실 값을 계산합니다. 
+
+
+#모델 학습
+model.fit(독립,종속,epochs=10)
+#loss: 0.0681 - accuracy: 0.9815
+
+#model summary
+model.summary()
+#가중치 8148로 매우 작아짐
+
+
+
+
+
+
+#CNN called LeNet by Yann LeCun (1998)
+import tensorflow as tf
+import pandas as pd
+
+#data load
+(독립,종속),_=tf.keras.datasets.mnist.load_data()
+독립 = 독립.reshape(60000,28,28,1)
+종속 = pd.get_dummies(종속)
+print(독립.shape,종속.shape) #(60000, 28, 28, 1) (60000, 10)
+
+#model setting
+X = tf.keras.layers.Input(shape=[28,28,1])
+
+H = tf.keras.layers.Conv2D(6, kernel_size=5,padding='same',activation='swish')(X)
+#padding='same'은 kernel_size와 관계없이 Input과 같은 사이즈로 출력
+
+H = tf.keras.layers.MaxPool2D()(H)
+
+H = tf.keras.layers.Conv2D(16,kernel_size=5,activation='swish')(H)
+
+H = tf.keras.layers.MaxPool2D()(H)
+
+H = tf.keras.layers.Flatten()(H)
+
+H = tf.keras.layers.Dense(120,activation='swish')(H)
+
+H = tf.keras.layers.Dense(84,activation='swish')(H)
+
+Y = tf.keras.layers.Dense(10,activation='softmax')(H)
+
+model = tf.keras.models.Model(X,Y)
+
+model.compile(loss='categorical_crossentropy', metrics='accuracy')
+
+#model fit
+model.fit(독립,종속,epochs=10)
+
+
+
+
+
+
+#Cifar 10 by LeNet
+
+#CNN called LeNet by Yann LeCun (1998)
+import tensorflow as tf
+import pandas as pd
+
+#data load
+(독립,종속),_ = tf.keras.datasets.cifar10.load_data()
+print(독립.shape,종속.shape) #(50000, 32, 32, 3) (50000, 1)
+#독립은 3차원이니 그대로 두고, 종속은 레이블 개수에 맞게 원핫인코딩
+종속 = pd.get_dummies(종속.reshape(50000))
+# 종속 = pd.get_dummies(종속) 하면 에러뜸. 2차원 데이터 형태가 표형태가 아니라서 원핫인코딩 안됨. 1차원혀형태로 reshape
+print(독립.shape,종속.shape) #(50000, 32, 32, 3) (50000, 10)
+
+#model setting
+X = tf.keras.layers.Input(shape=[32,32,3])
+
+H = tf.keras.layers.Conv2D(6, kernel_size=5,activation='swish')(X)
+#padding='same'은 kernel_size와 관계없이 Input과 같은 사이즈로 출력
+
+H = tf.keras.layers.MaxPool2D()(H)
+
+H = tf.keras.layers.Conv2D(16,kernel_size=5,activation='swish')(H)
+
+H = tf.keras.layers.MaxPool2D()(H)
+
+H = tf.keras.layers.Flatten()(H)
+
+H = tf.keras.layers.Dense(120,activation='swish')(H)
+
+H = tf.keras.layers.Dense(84,activation='swish')(H)
+
+Y = tf.keras.layers.Dense(10,activation='softmax')(H)
+
+model = tf.keras.models.Model(X,Y)
+
+model.compile(loss='categorical_crossentropy', metrics='accuracy')
+
+#model fit
+model.fit(독립,종속,epochs=10)
+
+#데이터가 더 어려워서 mnist에 비해 학습 잘 안됨
+
+# 내 이미지 활용하기
+#not mnist
+
+#데이터 압축 해제
+!wget -q https://raw.githubusercontent.com/blackdew/tensorflow1/master/csv/notMNIST_small.tar.gz
+!tar -xzf notMNIST_small.tar.gz
+
+# 1.과거의 데이터를 내 로컬로부터 이미지를 읽어들여 준비.
+import glob
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# 이미지 파일 경로 가져오기
+paths = glob.glob('./notMNIST_small/*/*.png')
+
+# 이미지 파일 경로를 무작위로 섞기
+paths = np.random.permutation(paths)
+
+# 이미지를 numpy 배열로 읽어들이기
+독립 = np.array([plt.imread(path) for path in paths])
+
+# 이미지 파일 경로에서 종속 변수 생성
+종속 = np.array([path.split('/')[-2] for path in paths])
+
+print(독립.shape, 종속.shape) #(18724, 28, 28) (18724,)
+
+#이미지 사이즈가 제각각일 것. 이미지 편집 도구들의 resizing을 통해 수정
+
+독립 = 독립.reshape(18724,28,28,1)
+종속 = pd.get_dummies(종속)
+print(독립.shape, 종속.shape) #(18724, 28, 28, 1) (18724, 10)
+
+import tensorflow as tf
+
+#model setting
+X = tf.keras.layers.Input(shape=[28,28,1])
+
+H = tf.keras.layers.Conv2D(6, kernel_size=5,padding='same',activation='swish')(X)
+#padding='same'은 kernel_size와 관계없이 Input과 같은 사이즈로 출력
+
+H = tf.keras.layers.MaxPool2D()(H)
+
+H = tf.keras.layers.Conv2D(16,kernel_size=5,activation='swish')(H)
+
+H = tf.keras.layers.MaxPool2D()(H)
+
+H = tf.keras.layers.Flatten()(H)
+
+H = tf.keras.layers.Dense(120,activation='swish')(H)
+
+H = tf.keras.layers.Dense(84,activation='swish')(H)
+
+Y = tf.keras.layers.Dense(10,activation='softmax')(H)
+
+model = tf.keras.models.Model(X,Y)
+
+model.compile(loss='categorical_crossentropy', metrics='accuracy')
+
+#model fit
+model.fit(독립,종속,epochs=10)
+
+종속[0:10]
+
+plt.imshow(독립[1], cmap='gray')
