@@ -322,8 +322,8 @@ model.fit(독립,종속,epochs=10)
 #not mnist
 
 #데이터 압축 해제
-!wget -q https://raw.githubusercontent.com/blackdew/tensorflow1/master/csv/notMNIST_small.tar.gz
-!tar -xzf notMNIST_small.tar.gz
+# !wget -q https://raw.githubusercontent.com/blackdew/tensorflow1/master/csv/notMNIST_small.tar.gz
+# !tar -xzf notMNIST_small.tar.gz
 
 # 1.과거의 데이터를 내 로컬로부터 이미지를 읽어들여 준비.
 import glob
