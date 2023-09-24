@@ -6,7 +6,7 @@ import cv2
 print(cv2.__version__)
 
 # 이미지 파일 경로 설정
-img_path = '/Users/kimdongkyu/dev/Python/2023_2_semester/autonomous_driving/traffic line/road.jpg'
+img_path = '/Users/kimdongkyu/dev/Python/2023_2_semester/autonomous_driving/road.jpg'
 
 # 이미지 읽기
 img = cv2.imread(img_path)
