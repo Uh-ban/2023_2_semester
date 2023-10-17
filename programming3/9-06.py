@@ -19,9 +19,9 @@ print('바꾼 후 i, j : ',i,j)
 
 #세 자리의 정수를 입력받은 후, 각 자리 별로 출력시키기
 n = input('세자리 정수를 입력하시오 : ')
-print(n[:1])
-print(n[1:2])
-print(n[2:3])
+for i in range(len(n)):
+    print(n[i])
+    
 
 
 

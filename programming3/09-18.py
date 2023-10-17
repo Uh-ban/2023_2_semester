@@ -15,7 +15,7 @@ model = Sequential()
 
 model.add(Dense(30, input_dim=16, activation='relu'))
 
-model.add(Dense(1, activation = 'sigmoid'))
+model.add(Dense(1, activation = 'sigmoid')) #이진분류 하려고 1,0을 내는 sigmoid 활성화 함수 씀.
 
 model.compile(loss = 'binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
